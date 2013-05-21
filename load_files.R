@@ -1,43 +1,31 @@
+library(reshape)
+setwd("~/Projects/int_binding_foot/Data/libet_data")
 
+subnumbers = paste(1:16)
+condition <-rep(c("M", "W", "M", "W"), each=60)
+modality <- rep(c("hand", "foot"), each=120)
 
-setwd("/home/mje/Dropbox/Working_projects/int_binding_foot/libet_data")
-
-subnumbers = c("101", "102", "103", "104", "105", "106", "107", "108", "109", 
-               "111", "112", "113", "114", "115", "116", "117")
 
 for (i in subnumbers) {
-  fm1 = paste("subject_", i, "_M-press-foot.csv", sep="")
-  fm2 = paste("subject_", i, "_M-press-foot1.csv", sep="")
-  foot_m1 = read.csv(file=fm1, sep=";")
-  foot_m2 = read.csv(file=fm2, sep=";")
-
-  fw1 = paste("subject_", i, "_W-press-foot.csv", sep="")
-  fw2 = paste("subject_", i, "_W-press-foot1.csv", sep="")
-  foot_w1 = read.csv(file=fw1, sep=";")
-  foot_w2 = read.csv(file=fw2, sep=";")
+  foo = data.frame()
+  sub_name <- paste("sub_", i, "_libet", sep="")
+  sub_name_long <- paste("sub_", i, "_libet_long", sep="")
+  csv_name <-paste("libet_sub_", i, ".csv", sep="")
+  foo <- read.csv(file=csv_name, header=FALSE)
   
-
-#   
-  foot_m1$orig_condition = foot_m1$condition
-  foot_m1$condition = "M"
-  foot_m1$modality = "foot"
-  foot_m2$orig_condition = foot_m2$condition
-  foot_m2$condition = "M"
-  foot_m2$modality = "foot"
-  foot_w1$orig_condition = foot_w1$condition
-  foot_w1$condition = "W"
-  foot_w1$modality = "foot"
-  foot_w2$orig_condition = foot_w2$condition
-  foot_w2$condition = "W"
-  foot_w2$modality = "foot"
+  names(foo) <- c("m_hand", "w_hand", "m_foot", "w_foot")
+  foo$subid <- i
+  assign(sub_name, foo)
   
-  foo = rbind(foot_m1, foot_m2, foot_w1, foot_w2)
-  foo$ansCalcAngle = foo$ansAngle - foo$pressAngle
-  foo$calcTime = foo$ansCalcAngle*2550/360
-  foo$test <- 2.56*((foo$ansAngle - foo$pressAngle)/(360)) 
-
-  oname = paste("sub_", i, "_foot", sep="")
-  assign(oname, foo)  
+  foo = melt(foo, id="subid", measured=var_names)
+  foo$condition <- condition
+  foo$modality <- modality
+  names(foo) <- c("subid", "orig_cond", "time", "condition","modality")
+  assign(sub_name_long, foo)
   
   
 }
+
+
+
+  
