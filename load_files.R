@@ -26,6 +26,15 @@ for (i in subnumbers) {
   
 }
 
+data_all = rbind(sub_1_libet, sub_2_libet, sub_3_libet, sub_4_libet, 
+                 sub_5_libet, sub_6_libet, sub_7_libet, sub_8_libet,
+                 sub_9_libet, sub_10_libet, sub_11_libet, sub_12_libet,
+                 sub_13_libet, sub_14_libet, sub_15_libet, sub_16_libet)
 
+data_all_long = rbind(sub_1_libet_long, sub_2_libet_long, sub_3_libet_long, 
+                      sub_4_libet_long, sub_5_libet_long, sub_6_libet_long,
+                      sub_7_libet_long, sub_8_libet_long, sub_9_libet_long,
+                      sub_10_libet_long, sub_11_libet_long, sub_12_libet_long,
+                      sub_13_libet_long, sub_14_libet_long, sub_15_libet_long,
+                      sub_16_libet_long)
 
-  
