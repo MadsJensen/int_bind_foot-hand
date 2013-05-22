@@ -6,6 +6,8 @@ condition <-rep(c("M", "W", "M", "W"), each=60)
 modality <- rep(c("hand", "foot"), each=120)
 
 
+
+#### Libet data ####
 for (i in subnumbers) {
   foo = data.frame()
   sub_name <- paste("sub_", i, "_libet", sep="")
@@ -38,3 +40,37 @@ data_all_long = rbind(sub_1_libet_long, sub_2_libet_long, sub_3_libet_long,
                       sub_13_libet_long, sub_14_libet_long, sub_15_libet_long,
                       sub_16_libet_long)
 
+
+
+#### IB data #####
+
+setwd("~/Projects/int_binding_foot/Data/IB_data/")
+
+for (i in subnumbers) {
+  foo = data.frame()
+  sub_name <- paste("IB_sub_", i, sep="")
+  sub_name_long <- paste("IB_sub_", i, "_long", sep="")
+  csv_name <-paste("IB_sub_", i, ".csv", sep="")
+  foo <- read.csv(file=csv_name, header=FALSE)
+    
+  names(foo) <- c("actionPressHand", "actionPressFoot", "actionToneHand", 
+  "actionToneFoot", "singlePressHand", "singlePressFoot", "singleTone");
+  foo$subid <- i
+  assign(sub_name, foo)
+  
+  foo = melt(foo, id="subid", measured=- c("actionPressHand", "actionPressFoot", "actionToneHand", 
+                                           "actionToneFoot", "singlePressHand", "singlePressFoot", 
+                                           "singleTone"))
+ 
+  names(foo) <- c("subid", "orig_cond", "time")
+  assign(sub_name_long, foo)
+}
+
+IB_data_all = rbind(IB_sub_1, IB_sub_2, IB_sub_3, IB_sub_4, IB_sub_5, IB_sub_6, 
+                 IB_sub_7, IB_sub_8, IB_sub_9, IB_sub_10, IB_sub_11, IB_sub_12,
+                 IB_sub_13, IB_sub_14, IB_sub_15, IB_sub_16)
+
+IB_data_all_long = rbind(IB_sub_1_long, IB_sub_2_long, IB_sub_3_long, IB_sub_4_long, 
+                         IB_sub_5_long, IB_sub_6_long, IB_sub_7_long, IB_sub_8_long,
+                         IB_sub_9_long, IB_sub_10_long, IB_sub_11_long, IB_sub_12_long,
+                         IB_sub_13_long, IB_sub_14_long, IB_sub_15_long, IB_sub_16_long)
