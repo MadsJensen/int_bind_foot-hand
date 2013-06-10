@@ -39,3 +39,16 @@ ggplot(IB_data_all_long_no_outlier, aes(condition, time)) +
   geom_boxplot() + 
   coord_flip() 
 
+
+#### interaction plot ####
+line <- ggplot(IB_mean_long, aes(condition,meanShift, colour=modality))
+  line + stat_summary(fun.y = mean, geom = "line", aes(group=modality)) + 
+  stat_summary(fun.y = mean, geom = "point", aes(group=modality)) + 
+  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width=0.2 )
+
+
+line <- ggplot(IB_mean_long, aes(modality, meanShift, colour=condition))
+line + stat_summary(fun.y = mean, geom = "line", aes(group=condition)) + 
+  stat_summary(fun.y = mean, geom = "point", aes(group=condition)) + 
+  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width=0.2 )
+
