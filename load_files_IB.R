@@ -1,7 +1,7 @@
 
 library(reshape)
 
-subnumbers = paste(1:16)
+subnumbers <- c(1:16)
 
 setwd("~/Projects/int_binding_foot/Data/IB_data/")
 
@@ -46,6 +46,8 @@ for (i in subnumbers) {
   foo$actionToneFoot[foo$singlePressFoot > ((2*foo$sPF_sd)  + foo$sPF_m)|
                        foo$singlePressFoot < ((-2*foo$sPF_sd)  + foo$sPF_m)] <- NA
   foo$singleTone[foo$singleTone > ((2*foo$sT_sd) + foo$sT_m) | foo$singleTone < ((-2*foo$sT_sd) + foo$sT_m)] <- NA  
+  foo$trialNr <- c(1:40)
+  
   
   assign(sub_name, foo)
   
@@ -65,3 +67,5 @@ IB_data_all_long = rbind(IB_sub_1_long, IB_sub_2_long, IB_sub_3_long, IB_sub_4_l
                          IB_sub_5_long, IB_sub_6_long, IB_sub_7_long, IB_sub_8_long,
                          IB_sub_9_long, IB_sub_10_long, IB_sub_11_long, IB_sub_12_long,
                          IB_sub_13_long, IB_sub_14_long, IB_sub_15_long, IB_sub_16_long)
+
+IB_data_all_long$trialNr <- rep(c(1:40), times=112)

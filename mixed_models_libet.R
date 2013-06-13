@@ -80,22 +80,6 @@ library(lme4)
 
 #### IB data ####
 
-library(lme4)
-# test random effect
-mR1 <- lmer(meanShift ~ modality*condition + (1|subid) + (1|modality) + (1 |condition), data=IB_mean_long, REML=FALSE)
-mR2 <- lmer(meanShift ~ modality*condition + (1|subid), data=IB_mean_long, REML=FALSE)
-anova(mR1, mR2)
-
-# build and test models
-m1 <- lmer(meanShift ~ 1 + (1|subid) , data=IB_mean_long, REML=FALSE)
-m2 <- update(m1, .~. + condition)
-m3 <- update(m2, .~. + modality)
-m4 <- update(m3, .~. + condition:modality)
-
-anova(m1,m2,m3,m4)
-
-m_test <- lmer(meanShift ~ condition*modality + (1|subid) , data=IB_mean_long, REML=FALSE)
-
 
 library(nlme)
 
@@ -145,10 +129,10 @@ x#### EZ ####
 library(ez)
 
 fooAnova <- ezANOVA(
-  data = IB_mean_long,
+  data = IB_mean_long_subset,
   dv = .(meanShift),
   wid = .(subid),
-  within = .(modality, condition),
+  within = .(subset, modality, condition),
   type = 3,
   detailed = TRUE
 )
@@ -163,7 +147,55 @@ fooTablefoo$SSd <- round(fooTablefoo$SSd, 4)
 fooTablefoo$ges <- round(fooTablefoo$ges, 4)
 print(fooTablefoo)
 
+#### subsets ####
+
+library(lme4)
+# test random effect
+mR1 <- lmer(meanShift ~ modality*condition + 
+              (1|subid) + (1|modality) + (1 |condition) +(1| subset),
+            data=IB_mean_long_subset, REML=FALSE)
+
+mR2 <- lmer(meanShift ~ modality*condition + (1|subid), data=IB_mean_long_subset, REML=FALSE)
+anova(mR1, mR2)
+
+# build and test models
+m1 <- lmer(meanShift ~ 1 + (1|subid) + (1|modality) + (1 |condition) +(1| subset), data=IB_mean_long_subset, REML=FALSE)
+m2 <- update(m1, .~. + condition)
+m3 <- update(m2, .~. + modality )
+m4 <- update(m3, .~. + ordered(subset))
+m5 <- update(m4, .~. + condition:modality)
+m6 <- update(m5, .~. + condition:ordered(subset))
+m7 <- update(m6, .~. + modality:ordered(subset))
+m8 <- update(m7, .~. + condition:modality:ordered(subset))
+anova(m1, m2, m3, m4, m5, m6, m7, m8)
 
 
+library(nlme)
 
+# test random effect
+mR1 <- lme(meanShift ~ condition*modality, random = ~1|subid/condition/modality , 
+           data=IB_mean_long, method="ML")
+mR2 <- lme(meanShift ~condition*modality, random = ~1|subid , 
+           data=IB_mean_long, method="ML")
+anova(mR1, mR2)
+
+# build models
+m1 <- lme(meanShift ~ 1, random = ~1|subid/condition/modality , 
+          data=IB_mean_long_subset, method="ML")
+m2 <- update(m1, .~. + condition)
+m3 <- update(m2, .~. + modality )
+m4 <- update(m3, .~. + ordered(subset))
+m5 <- update(m4, .~. + condition:modality)
+m6 <- update(m5, .~. + condition:ordered(subset))
+m7 <- update(m6, .~. + modality:ordered(subset))
+m8 <- update(m7, .~. + condition:modality:ordered(subset))
+anova(m1, m2, m3, m4, m5, m6, m7, m8)
+
+postHocs.cond<-glht(m4, linfct = mcp(condition = "Tukey"))
+summary(postHocs.cond)
+confint(postHocs.cond)
+
+postHocs.mod<-glht(m4, linfct = mcp(modality = "Tukey"))
+summary(postHocs.mod)
+confint(postHocs.mod)
 

@@ -52,3 +52,24 @@ line + stat_summary(fun.y = mean, geom = "line", aes(group=condition)) +
   stat_summary(fun.y = mean, geom = "point", aes(group=condition)) + 
   stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width=0.2 )
 
+
+
+#### single sub plots ####
+foo <- na.omit(IB_data_all_long)
+
+
+ggplot(subset(foo, foo$variable=="actionPressHand"), aes(trialNr, value)) +
+  geom_point() + geom_smooth(method = "lm", alpha = 0.5) + facet_wrap(~subid)
+
+ggplot(subset(foo, foo$variable=="singlePressHand"), aes(trialNr, value)) +
+  geom_point() + geom_smooth(method = "lm", alpha = 0.5) + facet_wrap(~subid)
+
+
+ggplot(subset(foo, foo$variable=="actionPressHand" | 
+                foo$variable=="singlePressHand"), aes(trialNr, value)) +
+  geom_point(aes(pch=variable)) + 
+  geom_smooth(method = "lm", alpha = 0.5, aes(linetype=variable)) + 
+  facet_wrap(~subid)
+
+
+
