@@ -25,10 +25,16 @@ qplot(time, data=data_all_long_no_outlier, geom="histogram") + facet_wrap(~modal
 
 
 
-ggplot(IB_data_all_long_no_outlier, aes(condition, time)) + 
+ggplot(IB_mean_long, aes(condition, meanShift)) + 
   geom_boxplot() + 
   coord_flip() +
-  facet_wrap(~subid)
+  facet_wrap(~modality)
+
+ggplot(IB_mean_long, aes(modality, meanShift)) + 
+  geom_boxplot() + 
+  coord_flip() +
+  facet_wrap(~condition)
+
 
 ggplot(IB_data_all_long_no_outlier, aes(subid, time)) + 
   geom_boxplot() + 
