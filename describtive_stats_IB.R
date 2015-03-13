@@ -1,67 +1,76 @@
+setwd("/home/mje/Projects/int_bind_foot-hand/data/data")
+source("/home/mje/Projects/int_bind_foot-hand/importFun.R")
 
-#source('/home/mje/Projects/int_binding_foot/Scripts/load_files.R')
-
-library(pastecs)
-library(reshape)
-
-#### describtive statistics IB data ####
-setwd("~/Projects/int_binding_foot/Data/IB_data/")
-
-subnumbers <- c(1,10,11,12,13,14,15,16,2,3,4,5,6,7,8,9)
-
-options(digits=2)
-# by(IB_data_all_long$time,
-#    IB_data_all_long[, c("subid", "orig_cond")],
-#    stat.desc, basic=F, norm=T)
-
-options(digits=4)
-IB_mean_table <- as.data.frame(tapply(IB_data_all_long$value,
-                                      data.frame(IB_data_all_long$subid,
-                                                 IB_data_all_long$variable),
-                                      mean,
-                                      na.rm=TRUE
-))
-
-IB_sd_table <- as.data.frame(tapply(IB_data_all_long$value,
-                                    data.frame(IB_data_all_long$subid,
-                                               IB_data_all_long$variable),
-                                    sd,
-                                    na.rm=TRUE
-))
+library(dplyr)
 
 
-### make mean table ###
-IB_mean_table$subid <- subnumbers
-IB_mean_table$actionHandShift <-  IB_mean_table$actionPressHand -IB_mean_table$singlePressHand
-IB_mean_table$actionFootShift <-  IB_mean_table$actionPressFoot -IB_mean_table$singlePressFoot
-IB_mean_table$toneHandShift <-  IB_mean_table$actionToneHand -IB_mean_table$singleTone
-IB_mean_table$toneFootShift <-  IB_mean_table$actionToneFoot -IB_mean_table$singleTone
+subjects = c(101:109, 111:117)
+conditions = c("M-press-hand", "M-press-hand1")
+
+for (ii in subjects){
+    nam <- paste("sub_",ii,"_M", sep="")
+    sub.data <- importData(ii,conditions)
+    sub.data <- tbl_df(sub.data)
+    sub.data$modality <- "hand"
+    sub.data$condition <- "M"
+    assign(nam, sub.data)
+}
+
+conditions = c("W-press-hand", "W-press-hand1")
+
+for (ii in subjects){
+    nam <- paste("sub_",ii,"_W", sep="")
+    sub.data <- importData(ii,conditions)
+    sub.data <- tbl_df(sub.data)
+    sub.data$modality <- "hand"
+    sub.data$condition <- "W"
+    assign(nam, sub.data)
+}
 
 
-#### make sd table ####
-IB_sd_table$subid <- subnumbers
-IB_sd_table$actionHandShift <-  IB_sd_table$actionPressHand -IB_sd_table$singlePressHand
-IB_sd_table$actionFootShift <-  IB_sd_table$actionPressFoot -IB_sd_table$singlePressFoot
-IB_sd_table$toneHandShift <-  IB_sd_table$actionToneHand -IB_sd_table$singleTone
-IB_sd_table$toneFootShift <-  IB_sd_table$actionToneFoot -IB_sd_table$singleTone
+hand_list <- ls(pattern = "sub_1")
+all_hand = get(hand_list[1])
+    
+for (j in 1:length(hand_list)) {
+    if (j == 1){all_hand <- get(hand_list[j])}
+    else
+    {all_hand <- bind_rows(all_hand, get(hand_list[j]))}
+    }
 
 
+conditions = c("M-press-foot", "M-press-foot1")
 
-#### shift data long format ####
+for (ii in subjects){
+    nam <- paste("sub_",ii,"_M", sep="")
+    sub.data <- importData(ii,conditions)
+    sub.data <- tbl_df(sub.data)
+    sub.data$modality <- "foot"
+    sub.data$condition <- "M"
+    assign(nam, sub.data)
+}
 
-IB_long_vars <- c("actionHandShift", "actionFootShift", "toneHandShift", "toneFootShift")
-condition <-rep(c("action", "action", "tone", "tone"), each=16)
-modality <- rep(c("hand", "foot"), each=16)
-foobar <- IB_mean_table[,8:12]
+conditions = c("W-press-foot", "W-press-foot1")
 
-IB_mean_long = melt(foobar, id="subid", 
-                    measured=c("actionHandShift", "actionFootShift", "toneHandShift", "toneFootShift"))
-IB_mean_long$condition <- condition
-IB_mean_long$modality <- modality
-names(IB_mean_long) <- c("subid", "orig_cond", "meanShift", "condition","modality")
+for (ii in subjects){
+    nam <- paste("sub_",ii,"_W", sep="")
+    sub.data <- importData(ii,conditions)
+    sub.data <- tbl_df(sub.data)
+    sub.data$modality <- "foot"
+    sub.data$condition <- "W"
+    assign(nam, sub.data)
+}
 
-IB_mean_long$modality <- as.factor(IB_mean_long$modality)
-IB_mean_long$condition <- as.factor(IB_mean_long$condition)
+foot_list <- ls(pattern = "sub_1")
+all_foot = get(foot_list[1])
+    
+for (j in 1:length(foot_list)) {
+    if (j == 1) {all_foot <- get(foot_list[j])}
+    else
+    {all_foot <- bind_rows(all_foot, get(foot_list[j]))}
+    } 
 
-IB_mean_grp <- groupedData(meanShift ~ 1 | subid,  data = IB_mean_long )
+# combine data into data_frame
+all_data = bind_rows(all_hand, all_foot)
 
+all_data$condition <- as.factor(all_data$condition)
+all_data$modality <- as.factor(all_data$modality)

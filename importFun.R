@@ -1,11 +1,12 @@
-### Function for importing and pre-cleaning Libet data
+#### Function for importing and pre-cleaning Libet data ####
 # created 21.09.14 @MCV
 
 importData <- function(subject.name, conditions){  
   for (con in 1:length(conditions)){
     print(conditions[con])
     temp.dat <- read.csv(paste(c("subject_",subject.name,"_",conditions[con],".csv")
-                               ,collapse=''), sep=";",header=T)
+                          ,collapse=''), sep=";",header=TRUE, 
+                         stringsAsFactors = FALSE)
     if (match(conditions[con],conditions)==1){
       sub.data <- temp.dat
     }
@@ -14,7 +15,7 @@ importData <- function(subject.name, conditions){
     }
   }
   sub.data$userError <- as.logical(sub.data$userError)
-  sub.data$id <- as.factor(sub.data$id)
+  # sub.data$id <- as.factor(sub.data$id)
   
   sub.data <- subset(sub.data, userError==F)
   

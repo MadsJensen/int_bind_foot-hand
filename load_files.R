@@ -1,5 +1,5 @@
 library(reshape)
-setwd("~/Projects/int_binding_foot/Data/libet_data")
+setwd("/home/mje/Dropbox/Working_projects/int_binding_foot/libet_data")
 
 subnumbers = paste(1:16)
 condition <-rep(c("M", "W", "M", "W"), each=60)
