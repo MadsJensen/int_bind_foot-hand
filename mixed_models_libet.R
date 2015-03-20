@@ -3,7 +3,7 @@
 library(lme4)
 
 m1 <- lmer(errorTime ~ 1 + (1|id) + (1|id:modality) + (1 |id:condition),
-           data=all_data,  REML=FALSE)
+           data=data,  REML=FALSE)
 
 m2 <- update(m1, .~. + modality)
 m3 <- update(m2, .~. + condition)
@@ -24,9 +24,9 @@ confint(postHocs.mod)
 
 # folluw up t-test
 
-mod_foot = subset(IB_mean_long, IB_mean_long$modality == "foot")
-mod_hand = subset(IB_mean_long, IB_mean_long$modality == "hand")
-t.test(mod_foot$meanShift, mod_hand$meanShift, paired=TRUE)
+mod_foot = subset(data, data$modality == "foot")
+mod_hand = subset(data, data$modality == "hand")
+t.test(mod_foot$errorTime, mod_hand$errorTime, paired=TRUE)
 
 cond_action = subset(IB_mean_long, IB_mean_long$condition == "action")
 cond_tone = subset(IB_mean_long, IB_mean_long$condition == "tone")
@@ -38,8 +38,8 @@ t.test(cond_action$meanShift, cond_tone$meanShift, paired=TRUE)
 library(ez)
 
 fooAnova <- ezANOVA(
-  data = data,
-  dv = .(errorTime),
+  data = data_grp,
+  dv = .(mean),
   wid = .(id),
   within = .(modality, condition),
   type = 3,
