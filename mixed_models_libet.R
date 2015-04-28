@@ -2,23 +2,26 @@
 
 library(lme4)
 
-m1 <- lmer(errorTime ~ 1 + (1|id) + (1|id:modality) + (1 |id:condition),
-           data=data,  REML=FALSE)
+m1 <-
+  lmer(
+    errorTime ~ 1 + (1 | id) + (1 | id:modality) + (1 | id:condition),
+    data = all_data,  REML = FALSE
+  )
 
-m2 <- update(m1, .~. + modality)
-m3 <- update(m2, .~. + condition)
-m4 <- update(m3, .~. + condition:modality)
+m2 <- update(m1, . ~ . + modality)
+m3 <- update(m2, . ~ . + condition)
+m4 <- update(m3, . ~ . + condition:modality)
 
 anova(m1,m2,m3,m4)
 
 
 library(multcomp)
 # linear testing
-postHocs.cond<-glht(m4, linfct = mcp(condition = "Tukey"))
+postHocs.cond <- glht(m4, linfct = mcp(condition = "Tukey"))
 summary(postHocs.cond)
 confint(postHocs.cond)
 
-postHocs.mod<-glht(m4, linfct = mcp(modality = "Tukey"))
+postHocs.mod <- glht(m4, linfct = mcp(modality = "Tukey"))
 summary(postHocs.mod)
 confint(postHocs.mod)
 
@@ -26,11 +29,11 @@ confint(postHocs.mod)
 
 mod_foot = subset(data, data$modality == "foot")
 mod_hand = subset(data, data$modality == "hand")
-t.test(mod_foot$errorTime, mod_hand$errorTime, paired=TRUE)
+t.test(mod_foot$errorTime, mod_hand$errorTime, paired = TRUE)
 
 cond_action = subset(IB_mean_long, IB_mean_long$condition == "action")
 cond_tone = subset(IB_mean_long, IB_mean_long$condition == "tone")
-t.test(cond_action$meanShift, cond_tone$meanShift, paired=TRUE)
+t.test(cond_action$meanShift, cond_tone$meanShift, paired = TRUE)
 
 
 #### EZ ####
@@ -55,4 +58,3 @@ fooTablefoo$SSn <- round(fooTablefoo$SSn, 4)
 fooTablefoo$SSd <- round(fooTablefoo$SSd, 4)
 fooTablefoo$ges <- round(fooTablefoo$ges, 4)
 print(fooTablefoo)
-
