@@ -1,5 +1,6 @@
 setwd("~/Projects/int_bind_foot-hand/Libet-part/data")
-source("/home/mje/Projects/int_bind_foot-hand/importFun.R")
+# source("/home/mje/Projects/int_bind_foot-hand/importFun.R")
+source("/Users/mads/Projects/int_bind_foot-hand/importFun.R")
 
 library(dplyr)
 
