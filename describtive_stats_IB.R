@@ -1,5 +1,6 @@
 setwd("~/Projects/int_bind_foot-hand/IB-part/data")
-source("/home/mje/Projects/int_bind_foot-hand/importFun.R")
+# source("/home/mje/Projects/int_bind_foot-hand/importFun.R")
+source("~/Projects/int_bind_foot-hand/importFun.R")
 
 library(dplyr)
 library(tidyr)
@@ -93,10 +94,14 @@ data_wide_action <- data_wide_action %>% mutate(diff = foot - hand)
 data_wide_foot <- filter(data, modality == "foot") %>% 
     group_by(id, condition) %>%
     summarise(mean = mean(errorTime)) %>% spread(condition, mean)
-data_wide_foot <- data_wide_foot %>% mutate(diff = actionPress - baseline)
+data_wide_foot <- data_wide_foot %>% mutate(diff = actionPress - baseline,
+                                            modality = "foot")
 
 
 data_wide_hand <- filter(data, modality == "hand") %>% 
     group_by(id, condition) %>%
     summarise(mean = mean(errorTime)) %>% spread(condition, mean)
-data_wide_hand <- data_wide_hand %>% mutate(diff = actionPress - baseline)
+data_wide_hand <- data_wide_hand %>% mutate(diff = actionPress - baseline,
+                                            modality = "hand")
+
+data_wide = bind_rows(data_wide_hand, data_wide_foot)
