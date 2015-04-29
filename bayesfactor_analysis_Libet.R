@@ -10,6 +10,8 @@ source("/Users/mads/Projects/int_bind_foot-hand/describtive_stats_Libet.R")
 
 data$id <- as.factor(data$id)
 
+data_grp$id <- factor(data_grp$id)
+
 
 
 # BayesFactor analyses ----------------------------------------------------
