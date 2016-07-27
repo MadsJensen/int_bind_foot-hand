@@ -3,8 +3,9 @@ library(reshape)
 
 subnumbers <- c(1:16)
 
-setwd("/home/mje/Dropbox/Working_projects/int_binding_foot/IB_data")
+# setwd("/home/mje/Dropbox/Working_projects/int_binding_foot/IB_data")
 # setwd("~/Projects/int_binding_foot/Data/IB_data/")
+setwd("/Users/au194693/projects/int_bind_foot-hand/IB-part/data/")
 
 var_names <- c("actionPressHand", "actionPressFoot", "actionToneHand", 
             "actionToneFoot", "singlePressHand", "singlePressFoot", "singleTone");
